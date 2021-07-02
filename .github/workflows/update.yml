@@ -1,7 +1,7 @@
 name: Update Centrality Data
 on:
   schedule:
-    - cron: "44 20 2 * *"
+    - cron: "0 21 2 * *"
 jobs:
   update:
     runs-on: ubuntu-latest
