@@ -1,7 +1,7 @@
 name: Update Centrality Data
 on:
   schedule:
-    - cron: "15 23 2 * *"
+    - cron: "45 23 2 * *"
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -12,20 +12,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          path: ../storage
+          path: ./storage
 
       - name: Checkout the analyzer repository
         uses: actions/checkout@v2
         with:
           repository: ${{ github.repository_owner }}/analyzer
-          path: ../analyzer
+          path: ./analyzer
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
       - run: npm ci
-          
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -36,7 +36,7 @@ jobs:
       - run: python3 ./src/centrality/main.py
 
       - name: Commit updated data
-        working-directory: ../storage
+        working-directory: ./storage
         run: |
           git add .
           git commit -m "Update centrality until $(cat ./registry/npm/last_time_scope)"
