@@ -1,20 +1,22 @@
 name: Update Centrality Data
 on:
   schedule:
-    - cron: "0 21 2 * *"
+    - cron: "30 22 2 * *"
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: storage
 
       - name: Checkout the analyzer repository
         uses: actions/checkout@v2
         with:
           repository: "${{ github.repository_owner }}/analyzer"
-          path: ../analyzer
+          path: analyzer
 
-      - run: cd ../analyzer
+      - run: cd ./analyzer
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
