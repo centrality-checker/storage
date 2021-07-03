@@ -1,7 +1,8 @@
 name: Update Centrality Data
 on:
   schedule:
-    - cron: "45 23 2 * *"
+    - cron: "0 12 1 * *"
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -10,7 +11,8 @@ jobs:
         working-directory: ./analyzer
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the storage repository
+        uses: actions/checkout@v2
         with:
           path: ./storage
 
@@ -24,18 +26,25 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
-      - run: npm ci
+
+      - name: Install the JavaScript dependencies
+        run: npm ci
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.7"
-      - run: pip3 install -r requirements.txt
 
-      - run: npm run collect
-      - run: python3 ./src/centrality/main.py
+      - name: Install the Python dependencies
+        run: pip3 install -r requirements.txt
 
-      - name: Commit updated data
+      - name: Collect the dependency change events
+        run: npm run collect
+
+      - name: Calculate the centrality rankings
+        run: python3 ./src/centrality/main.py
+
+      - name: Commit the updated data
         working-directory: ./storage
         run: |
           git add .
