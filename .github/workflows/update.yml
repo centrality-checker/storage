@@ -1,7 +1,7 @@
 name: Update Centrality Data
 on:
   schedule:
-    - cron: "0 12 1 * *"
+    - cron: "30 17 4 * *"
 
 jobs:
   update:
@@ -47,6 +47,11 @@ jobs:
       - name: Commit the updated data
         working-directory: ./storage
         run: |
+          # Setup the user
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+          # Push the changes
           git add .
           git commit -m "Update centrality until $(cat ./registry/npm/last_time_scope)"
           git push
