@@ -1,7 +1,9 @@
 name: Update Centrality Data
 on:
   schedule:
-    - cron: "30 17 4 * *"
+    - cron: "0 17 1 * *"
+
+  workflow_dispatch:
 
 jobs:
   update:
