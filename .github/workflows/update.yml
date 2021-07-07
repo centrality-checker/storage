@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  update:
-    runs-on: macos-latest
+  updates:
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./analyzer
@@ -32,23 +32,12 @@ jobs:
       - name: Install the JavaScript dependencies
         run: npm ci
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.7"
-
-      - name: Install the Python dependencies
-        run: pip3 install -r requirements.txt
-
       - name: Collect the dependency change events
         run: npm run collect
         env:
           NODE_OPTIONS: '--max_old_space_size=6144'
-
-      - name: Calculate the centrality rankings
-        run: python3 ./src/centrality/main.py
-
-      - name: Commit the updated data
+        
+      - name: Commit the updated registry data
         working-directory: ./storage
         run: |
           # Setup the user
@@ -57,5 +46,47 @@ jobs:
 
           # Push the changes
           git add .
-          git commit -m "Update centrality until $(cat ./registry/npm/last_time_scope)"
+          git commit -m "Update the registry data until sequence: $(cat ./registry/npm/sequence)"
+          git push
+  
+  centrality:
+    runs-on: macos-latest
+    needs: updates
+    defaults:
+      run:
+        working-directory: ./analyzer
+
+    steps:
+      - name: Checkout the storage repository
+        uses: actions/checkout@v2
+        with:
+          path: ./storage
+
+      - name: Checkout the analyzer repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/analyzer
+          path: ./analyzer
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+
+      - name: Install the Python dependencies
+        run: pip3 install -r requirements.txt
+
+      - name: Calculate the centrality rankings
+        run: python3 ./src/centrality/main.py         
+
+      - name: Commit the updated centrality data
+        working-directory: ./storage
+        run: |
+          # Setup the user
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+          # Push the changes
+          git add .
+          git commit -m "Update the centrality until: $(cat ./registry/npm/last_time_scope)"
           git push
