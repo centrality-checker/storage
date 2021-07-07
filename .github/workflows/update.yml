@@ -6,7 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  updates:
+  collect:
+    name: Collect events from npm registry
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -49,9 +50,10 @@ jobs:
           git commit -m "Update the registry data until sequence: $(cat ./registry/npm/sequence)"
           git push
   
-  centrality:
+  cacaulte:
+    name: Cacaulte the centrality
     runs-on: macos-latest
-    needs: updates
+    needs: collect
     defaults:
       run:
         working-directory: ./analyzer
