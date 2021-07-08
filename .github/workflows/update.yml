@@ -46,7 +46,7 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
           # Push the changes
-          git add .
+          git add ./registry
           git commit -m "Update the registry data until sequence: $(cat ./registry/npm/sequence)"
           git push
   
