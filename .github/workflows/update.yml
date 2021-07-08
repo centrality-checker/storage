@@ -47,6 +47,7 @@ jobs:
 
           # Push the changes
           git add ./registry
+          git pull --ff-only
           git commit -m "Update the registry data until sequence: $(cat ./registry/npm/sequence)"
           git push
   
@@ -90,5 +91,6 @@ jobs:
 
           # Push the changes
           git add .
+          git pull --ff-only
           git commit -m "Update the centrality until: $(cat ./registry/npm/last_time_scope)"
           git push
