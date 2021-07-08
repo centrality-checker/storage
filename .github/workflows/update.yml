@@ -50,8 +50,8 @@ jobs:
           git commit -m "Update the registry data until sequence: $(cat ./registry/npm/sequence)"
           git push
   
-  cacaulte:
-    name: Cacaulte the centrality
+  calculate:
+    name: Calculate the centrality
     runs-on: macos-latest
     needs: collect
     defaults:
