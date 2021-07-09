@@ -2,18 +2,12 @@ name: Update Centrality Data
 on:
   schedule:
     - cron: "0 17 1 * *"
-
   workflow_dispatch:
-    inputs:
-      skipCollecting:
-        description: 'Skip Collecting New Events (yes/no)'
-        default: 'no'
 
 jobs:
   collect:
     name: Collect events
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.skipCollecting != 'yes'}}
     defaults:
       run:
         working-directory: ./analyzer
