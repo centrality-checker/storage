@@ -69,18 +69,17 @@ jobs:
 
       - name: Initialize RAM disk
         run: |
-          pwd
-          mount_point="${{ github.workspace }}/storage"
+          mount_point=${{ github.workspace }}/storage
           mkdir -p ${mount_point}
-
+          ramdisk_dev=`hdid -nomount ram://$((10000*1024*1024/512))`
+          newfs_hfs -v 'RAM Disk' ${ramdisk_dev}
+          mount -o noatime -t hfs ${ramdisk_dev} ${mount_point}
 
       - name: Checkout the storage repository
         uses: actions/checkout@v2
         with:
           path: ./storage
           ref: ${{ github.ref }}
-
-
 
       - name: Set up Python
         uses: actions/setup-python@v2
