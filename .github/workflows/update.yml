@@ -63,10 +63,10 @@ jobs:
     steps:
       - name: Initialize RAM disk
         run: |
-          mount_point=${{ github.workspace }}/storage
+          mount_point='${{ github.workspace }}/storage'
+          mkdir -p ${mount_point}
           ramdisk_dev=`hdid -nomount ram://$((10000*1024*1024/512))`
           newfs_hfs -v 'RAM Disk' ${ramdisk_dev}
-          mkdir -p ${mount_point}
           mount -o noatime -t hfs ${ramdisk_dev} ${mount_point}
 
       - name: Checkout the storage repository
