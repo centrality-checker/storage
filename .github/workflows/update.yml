@@ -56,20 +56,18 @@ jobs:
     name: Calculate the centrality
     runs-on: macos-latest
 #     needs: collect
-    defaults:
-      run:
-        working-directory: ./analyzer
+    env:
+      STORAGE_PATH: ${{ github.workspace }}/ramdisk/storage
 
     steps:
       - name: Checkout the analyzer repository
         uses: actions/checkout@v2
         with:
           repository: ${{ github.repository_owner }}/analyzer
-          path: ./analyzer
 
       - name: Initialize RAM disk
         run: |
-          mount_point=${{ github.workspace }}/storage
+          mount_point=${{ github.workspace }}/ramdisk
           mkdir -p ${mount_point}
           ramdisk_dev=`hdid -nomount ram://$((10000*1024*1024/512))`
           newfs_hfs -v 'RAM Disk' ${ramdisk_dev}
@@ -78,7 +76,7 @@ jobs:
       - name: Checkout the storage repository
         uses: actions/checkout@v2
         with:
-          path: ./storage
+          path: ${{ env.STORAGE_PATH }}
           ref: ${{ github.ref }}
 
       - name: Set up Python
@@ -93,7 +91,7 @@ jobs:
         run: python3 ./src/centrality/main.py         
 
       - name: Commit the updated centrality data
-        working-directory: ./storage
+        working-directory: ${{ env.STORAGE_PATH }}
         run: |
           # Setup the user
           git config --global user.name "${{ github.actor }}"
