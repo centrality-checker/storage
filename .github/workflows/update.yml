@@ -61,6 +61,12 @@ jobs:
         working-directory: ./analyzer
 
     steps:
+      - name: Checkout the analyzer repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/analyzer
+          path: ./analyzer
+
       - name: Initialize RAM disk
         run: |
           pwd
@@ -74,11 +80,7 @@ jobs:
           path: ./storage
           ref: ${{ github.ref }}
 
-      - name: Checkout the analyzer repository
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ github.repository_owner }}/analyzer
-          path: ./analyzer
+
 
       - name: Set up Python
         uses: actions/setup-python@v2
