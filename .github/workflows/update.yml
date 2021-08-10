@@ -1,12 +1,11 @@
 name: Update Centrality Data
 on:
-  schedule:
-    - cron: "0 17 1 * *"
+#   schedule:
+#     - cron: "0 17 1 * *"
   workflow_dispatch:
 
 jobs:
   collect:
-    if: false
     name: Collect events
     runs-on: ubuntu-latest
     defaults:
